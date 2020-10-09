@@ -1,59 +1,57 @@
 """Classes for melon orders."""
 
+class AbstractMelonOrder():
 
-class DomesticMelonOrder():
-    """A melon order within the USA."""
-
-    def __init__(self, species, qty):
-        """Initialize melon order attributes."""
+    def __init__(self, species, quantity):
 
         self.species = species
-        self.qty = qty
+        self.quantity = quantity
         self.shipped = False
-        self.order_type = "domestic"
-        self.tax = 0.08
-
-    def get_total(self):
-        """Calculate price, including tax."""
-
-        base_price = 5
-        total = (1 + self.tax) * self.qty * base_price
-
-        return total
-
+        
     def mark_shipped(self):
         """Record the fact than an order has been shipped."""
 
         self.shipped = True
 
+    def get_total(self):
+        """Calculate price, including tax."""
+        base_price = 5
+        
+        if self.species == "Christmas Melon":
+            base_price = base_price * 1.5
+ 
+        if self.order_type == 'International' and self.quantity < 10:
+            base_price = base_price + 3
+            
+        total = (1 + self.tax) * self.quantity * base_price
 
-class InternationalMelonOrder():
+        return total
+class DomesticMelonOrder(AbstractMelonOrder):
+    """A melon order within the USA."""
+    def __init__(self, species, quantity):
+        super().__init__(species, quantity)
+
+        self.order_type = 'Domestic'
+        self.tax = 0.05
+
+
+class InternationalMelonOrder(AbstractMelonOrder):
     """An international (non-US) melon order."""
 
-    def __init__(self, species, qty, country_code):
-        """Initialize melon order attributes."""
+    def __init__(self, species, quantity, country_code):
+        super().__init__(species, quantity)
 
-        self.species = species
-        self.qty = qty
-        self.country_code = country_code
-        self.shipped = False
-        self.order_type = "international"
+        self.order_type = 'International'
         self.tax = 0.17
-
-    def get_total(self):
-        """Calculate price, including tax."""
-
-        base_price = 5
-        total = (1 + self.tax) * self.qty * base_price
-
-        return total
-
-    def mark_shipped(self):
-        """Record the fact than an order has been shipped."""
-
-        self.shipped = True
+        self.country_code = country_code
 
     def get_country_code(self):
         """Return the country code."""
 
         return self.country_code
+
+
+
+
+
+    
